@@ -1,6 +1,6 @@
 <?php
 // remember to change the namespace
-namespace J7\MyPlugin;
+namespace J7\DokanCustomExtension;
 
 /**
  * Plugin installation and activation for WordPress themes.

@@ -46,7 +46,7 @@ public function check_required_plugins()
 const APP_NAME            = 'My Plugin';
 const KEBAB               = 'my-plugin';
 const SNAKE               = 'my_plugin';
-const GITHUB_REPO         = 'https://github.com/j7-dev/wp-plugin';
+const GITHUB_REPO         = 'https://github.com/j7-dev/wp-dokan-custom-extension';
 ```
 
 <br><br><br>

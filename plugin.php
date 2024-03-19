@@ -1,29 +1,29 @@
 <?php
 
 /**
- * Plugin Name:       My Plugin | 我的 WordPress 外掛
- * Plugin URI:        https://cloud.luke.cafe/plugins/
- * Description:       這是一個 WordPress 外掛的範本，可以用來開發新的外掛。
- * Version:           0.0.4
+ * Plugin Name:       供應商系統擴展 | Dokan Custom Extension
+ * Plugin URI:        https://github.com/j7-dev/wp-dokan-custom-extension
+ * Description:       此外掛為針對 DOKAN 外掛客製化擴展，整合 multi-vendor 的運費顯示
+ * Version:           0.0.1
  * Requires at least: 5.7
  * Requires PHP:      7.4
  * Author:            J7
  * Author URI:        https://github.com/j7-dev
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       power-partner-server
+ * Text Domain:       dokan-custom-extension
  * Domain Path:       /languages
  * Tags:
  */
 
 declare (strict_types = 1);
 
-namespace J7\MyPlugin;
+namespace J7\DokanCustomExtension;
 
-use J7\MyPlugin\Utils;
+use J7\DokanCustomExtension\Utils;
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
-if ( ! \class_exists( 'J7\MyPlugin\Plugin' ) ) {
+if ( ! \class_exists( 'J7\DokanCustomExtension\Plugin' ) ) {
 
 	final class Plugin {
 
@@ -48,8 +48,8 @@ if ( ! \class_exists( 'J7\MyPlugin\Plugin' ) ) {
 		public function __construct() {
 			require_once __DIR__ . '/required_plugins/index.php';
 			require_once __DIR__ . '/vendor/autoload.php';
-			require_once __DIR__ . '/inc/utils/index.php';
-			require_once __DIR__ . '/inc/class/index.php';
+			require_once __DIR__ . '/inc/utils/class-utils.php';
+			require_once __DIR__ . '/inc/class/class-bootstrap.php';
 
 			\register_activation_hook( __FILE__, array( $this, 'activate' ) );
 			\register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
