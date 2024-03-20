@@ -37,6 +37,6 @@ final class Bootstrap {
 			]
 		);
 
-		\wp_enqueue_style( Utils::KEBAB, Utils::get_plugin_url() . '/js/dist/index.css', [], Utils::get_plugin_ver(), 'all' );
+		\wp_enqueue_style( Utils::KEBAB, Utils::get_plugin_url() . '/js/dist/assets/css/index.css', [], Utils::get_plugin_ver(), 'all' );
 	}
 }

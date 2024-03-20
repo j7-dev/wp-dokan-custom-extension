@@ -4,6 +4,7 @@ import alias from '@rollup/plugin-alias'
 import path from 'path'
 import liveReload from 'vite-plugin-live-reload'
 import optimizer from 'vite-plugin-optimizer'
+import { terser } from 'rollup-plugin-terser'
 
 export default defineConfig({
   build: {
@@ -11,10 +12,10 @@ export default defineConfig({
     minify: true,
     outDir: path.resolve(__dirname, 'js/dist'),
 
-    // watch: {
-    //   include: 'js/src/**',
-    //   exclude: 'node_modules/**, .git/**, dist/**, .vscode/**',
-    // },
+    watch: {
+      include: 'js/src/**',
+      exclude: 'node_modules/**, .git/**, dist/**, .vscode/**',
+    },
 
     rollupOptions: {
       input: 'js/src/main.ts', // Optional, defaults to 'src/main.js'.
@@ -34,6 +35,11 @@ export default defineConfig({
     ]),
     optimizer({
       jquery: 'const $ = window.jQuery; export { $ as default }',
+    }),
+    terser({
+      mangle: {
+        reserved: ['$'], // 指定 $ 不被改變
+      },
     }),
   ],
   resolve: {

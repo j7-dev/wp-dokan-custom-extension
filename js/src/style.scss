@@ -1,3 +1,9 @@
-// @tailwind base;
-// @tailwind components;
-// @tailwind utilities;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.woocommerce-checkout-review-order-table {
+	.woocommerce-shipping-totals {
+		display: none;
+	}
+}
