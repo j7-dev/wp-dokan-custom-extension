@@ -37,10 +37,12 @@ export const renderCommonShippingRow = (commonShippingValues: string[]) => {
         .attr('name', inputName)
         .attr('data-value', value)
         .attr('id', `${inputName}_${value}`)
+        .removeAttr('checked')
       $(inputNode)
         .next('label')
         .attr('data-value', value)
         .attr('for', `${inputName}_${value}`)
+        .removeAttr('checked')
     })
 
     // 加上指定的 id & name
