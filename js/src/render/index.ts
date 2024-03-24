@@ -28,11 +28,19 @@ export const renderCommonShippingRow = (commonShippingValues: string[]) => {
     // 移除每個 input 的 id & name attribute
     // 並加上指定的 name
 
+    const inputName = '__shipping_method'
     shippingRow.find('input').each((i, inputNode) => {
-      $(inputNode).removeAttr('id name class data-index')
-      $(inputNode).attr('name', '__shipping_method')
       const value = $(inputNode).val() || ''
-      $(inputNode).next('label').attr('data-value', value)
+
+      $(inputNode).removeAttr('id name class data-index')
+      $(inputNode)
+        .attr('name', inputName)
+        .attr('data-value', value)
+        .attr('id', `${inputName}_${value}`)
+      $(inputNode)
+        .next('label')
+        .attr('data-value', value)
+        .attr('for', `${inputName}_${value}`)
     })
 
     // 加上指定的 id & name
@@ -82,6 +90,7 @@ export const renderCommonShippingRow = (commonShippingValues: string[]) => {
 
 export const addEventListener = () => {
   handleShowMoreButton()
+
   handleSyncSelectedShippingMethod()
 }
 
@@ -108,16 +117,19 @@ const handleSyncSelectedShippingMethod = () => {
   //   e.preventDefault()
   // })
 
-  theCloneRow.find('label').on('click', function (e) {
+  theCloneRow.find('input, label').on('click', function (e) {
     e.stopPropagation()
     e.preventDefault()
 
     const value = $(this).data('value')
+
     $(
       '.woocommerce-checkout-review-order-table .woocommerce-shipping-totals',
     ).each((i, shippingRow) => {
       $(shippingRow).find(`input[value="${value}"]`).prop('checked', true)
+      $(`input[name="shipping_method[${i}]"]`).val(value)
     })
+
     $(this).prev('input').prop('checked', true)
 
     // get form data of <form name="checkout">
@@ -127,16 +139,21 @@ const handleSyncSelectedShippingMethod = () => {
 
     // change formdata value to value to all fields with name starting with "shipping_method"
 
-    const newFormData = formData.map((field) => {
+    formData.forEach((field) => {
       if (field.name.startsWith('shipping_method')) {
         field.value = value || ''
       }
-      return field
     })
-    console.log('⭐  newFormData:', newFormData)
 
-    $('body').trigger('update_checkout')
+    // 這邊不能使用 trigger('update_checkout')，刷新頁面時，原本選中的運送方式與後端選中的運送方式不同步
+    // 不知道什麼原因，但使用原生點擊事件就不會有這問題
+    // 猜測是 點擊事件做了額外的事情，而 trigger('update_checkout') 沒有
+    // $('body').trigger('update_checkout')
+
+    $(
+      '.woocommerce-checkout-review-order-table .woocommerce-shipping-totals',
+    ).each((i, shippingRow) => {
+      $(shippingRow).find(`input[value="${value}"]`).trigger('click')
+    })
   })
-
-  // get the selected shipping method
 }

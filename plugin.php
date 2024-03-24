@@ -4,7 +4,7 @@
  * Plugin Name:       供應商系統擴展 | Dokan Custom Extension
  * Plugin URI:        https://github.com/j7-dev/wp-dokan-custom-extension
  * Description:       此外掛為針對 DOKAN 外掛客製化擴展，整合 multi-vendor 的運費顯示
- * Version:           0.0.1
+ * Version:           0.0.2
  * Requires at least: 5.7
  * Requires PHP:      7.4
  * Author:            J7
@@ -29,21 +29,7 @@ if ( ! \class_exists( 'J7\DokanCustomExtension\Plugin' ) ) {
 
 		private static $instance;
 
-		public $required_plugins = array(
-			// [
-			// 'name'     => 'WooCommerce',
-			// 'slug'     => 'woocommerce',
-			// 'required' => true,
-			// 'version'  => '7.6.1',
-			// ],
-			// array(
-			// 	'name'     => 'WP Toolkit',
-			// 	'slug'     => 'wp-toolkit',
-			// 	'source'   => 'https://github.com/j7-dev/wp-toolkit/releases/latest/download/wp-toolkit.zip',
-			// 	'required' => true,
-			// 	'version'  => '0.3.1',
-			// ),
-		);
+		public $required_plugins = array();
 
 		public function __construct() {
 			require_once __DIR__ . '/required_plugins/index.php';
@@ -91,7 +77,7 @@ if ( ! \class_exists( 'J7\DokanCustomExtension\Plugin' ) ) {
 
 		public function register_required_plugins(): void {
 
-			$config = [
+			$config = array(
 				'id'           => Utils::KEBAB, // Unique ID for hashing notices for multiple instances of TGMPA.
 				'default_path' => '', // Default absolute path to bundled plugins.
 				'menu'         => 'tgmpa-install-plugins', // Menu slug.
@@ -102,7 +88,7 @@ if ( ! \class_exists( 'J7\DokanCustomExtension\Plugin' ) ) {
 				'dismiss_msg'  => __( '這個訊息將在依賴套件被安裝並啟用後消失。' . Utils::APP_NAME . ' 沒有這些依賴套件的情況下將無法運作！', Utils::TEXT_DOMAIN ), // If 'dismissable' is false, this message will be output at top of nag.
 				'is_automatic' => true, // Automatically activate plugins after installation or not.
 				'message'      => '', // Message to output right before the plugins table.
-				'strings'      => [
+				'strings'      => array(
 					'page_title'                      => __( '安裝依賴套件', Utils::TEXT_DOMAIN ),
 					'menu_title'                      => __( '安裝依賴套件', Utils::TEXT_DOMAIN ),
 					'installing'                      => __( '安裝套件: %s', Utils::TEXT_DOMAIN ), // translators: %s: plugin name.
@@ -173,8 +159,8 @@ if ( ! \class_exists( 'J7\DokanCustomExtension\Plugin' ) ) {
 					'contact_admin'                   => __( '請聯繫網站管理員', Utils::TEXT_DOMAIN ),
 
 					'nag_type'                        => 'error', // Determines admin notice type - can only be one of the typical WP notice classes, such as 'updated', 'update-nag', 'notice-warning', 'notice-info' or 'error'. Some of which may not work as expected in older WP versions.
-				],
-			];
+				),
+			);
 
 			call_user_func( __NAMESPACE__ . '\tgmpa', $this->required_plugins, $config );
 		}

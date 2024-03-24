@@ -22,12 +22,9 @@ function main() {
   // render
 
   renderCommonShippingRow(commonShippingValues)
+
   addEventListener()
 }
-
-$(function () {
-  main()
-})
 
 $(document.body).on('updated_checkout', function () {
   main()
