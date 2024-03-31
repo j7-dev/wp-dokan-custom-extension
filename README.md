@@ -1,52 +1,41 @@
-# My Plugin | 我的 WordPress 外掛
-一句話講完 My Plugin :
+# 供應商系統擴展 | Dokan Custom Extension
+一句話講完 Dokan Custom Extension :
 
-> 這是一個 WordPress 外掛的範本，可以用來開發新的外掛。
+> 此外掛為針對 Dokan 外掛客製化擴展，整合 multi-vendor 的運費顯示即 Paynow 物流資訊。
 
 <br><br><br>
 
 ## ⚡ 主要功能
 
-#### 1. 整合 TGM Plugin
+#### 1. 簡化結帳頁的運費顯示
 
-功能: 方便你依賴其他外掛，詳情可以參考[說明](http://tgmpluginactivation.com/configuration/)
+功能: 取不同 vendor 的物流最大公約數，並保留個別設置的彈性
 
-<br><br><br>
+![image](https://github.com/j7-dev/woomp/assets/9213776/47b17ab3-76f1-474b-a023-d42dc59d482a)
 
-#### 2. 整合 plugin-update-checker
+![image](https://github.com/j7-dev/woomp/assets/9213776/0f5ea4bc-fc06-44c1-9c1f-dc6bf303b0f8)
 
-功能: 當你在 github release 時，可以自動通知使用者更新，詳情可以參考[說明](https://github.com/YahnisElsts/plugin-update-checker)
-
-<br><br><br>
-
-## 用法
-
-#### 請先執行 composer install 安裝依賴
 
 <br><br><br>
 
-#### 如果你依賴多個 plugins ，需要在 `check_required_plugins` 判斷是否都已經啟用
+#### 2. 子訂單同步物流資訊 & Paynow 物流資訊
 
-```php
-public function check_required_plugins()
-{
-	self::$is_all_plugins_activated = \class_exists(self::WOOCOMMERCE_CLASS);
+功能: Dokan 的一筆訂單如果包含多個 vendor ，會把那筆訂單拆成多個子訂單，但物流資訊 & 運送方式並不會同步
 
-	if (self::$is_all_plugins_activated) {
-		new Bootstrap();
-	}
-}
-```
+因此在子訂單是看不到物流資訊的，也無法使用第三方物流，例如 Paynow Shipping
+
+此外掛可以解決這個問題，但目前只限於 Paynow Shipping
+
+![image](https://github.com/j7-dev/woomp/assets/9213776/7eef5154-152c-482b-9846-e6b454bf43fe)
+
+![image](https://github.com/j7-dev/woomp/assets/9213776/f3ddb21f-128e-4865-aff9-30bdfa8eb382)
 
 <br><br><br>
 
-#### 在 Utils 定義常數
+#### 3. 供應商面板顯示 Paynow 物流資訊 Meta Box
 
-```php
-const APP_NAME            = 'My Plugin';
-const KEBAB               = 'my-plugin';
-const SNAKE               = 'my_plugin';
-const GITHUB_REPO         = 'https://github.com/j7-dev/wp-dokan-custom-extension';
-```
+![image](https://github.com/j7-dev/woomp/assets/9213776/fcb0abc0-16b2-49cd-9fbd-6e79e24b776d)
+
+
 
 <br><br><br>
