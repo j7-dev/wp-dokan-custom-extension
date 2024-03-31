@@ -30,17 +30,17 @@ final class Bootstrap {
 	 */
 	public function load_scripts() {
 		\wp_enqueue_script(
-			Utils::KEBAB,
-			Utils::get_plugin_url() . '/js/dist/index.js',
+			Plugin::KEBAB,
+			Plugin::$url . '/js/dist/index.js',
 			array( 'jquery' ),
-			Utils::get_plugin_ver(),
+			Plugin::$version,
 			array(
 				'strategy'  => 'async',
 				'in_footer' => true,
 			)
 		);
 
-		\wp_enqueue_style( Utils::KEBAB, Utils::get_plugin_url() . '/js/dist/assets/css/index.css', array(), Utils::get_plugin_ver(), 'all' );
+		\wp_enqueue_style( Plugin::KEBAB, Plugin::$url . '/js/dist/assets/css/index.css', array(), Plugin::$version, 'all' );
 	}
 
 	/**
