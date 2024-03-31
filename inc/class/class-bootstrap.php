@@ -21,7 +21,8 @@ final class Bootstrap {
 	public function __construct() {
 		\add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ) );
 		\add_action( 'dokan_order_detail_after_order_general_details', array( $this, 'add_paynow_metabox' ) );
-		\add_action( 'paynow_shipping_order_created', array( $this, 'sync_sub_order_meta' ), 100, 1 );
+		// \add_action( 'paynow_shipping_order_created', array( $this, 'sync_sub_order_meta' ), 100, 1 );
+		\add_action( 'dokan_create_sub_order_before_calculate_totals', array( $this, 'do_sync_sub_order_meta' ), 100, 2 );
 	}
 
 	/**
@@ -62,10 +63,17 @@ final class Bootstrap {
 		$order = \wc_get_order( $order_id );
 
 		if ( class_exists( '\PayNow_Shipping_Order_Meta_Box' ) && method_exists( '\PayNow_Shipping_Order_Meta_Box', 'output' ) ) {
-			echo '<div class="dokan-panel dokan-panel-default">';
-			echo '<div class="dokan-panel-heading"><strong>Paynow 物流資訊</strong></div>';
+			?>
+			<script>
+				var ajaxurl = '<?php echo \admin_url( 'admin-ajax.php' ); // phpcs:ignore ?>';
+			</script>
+<div class="dokan-panel dokan-panel-default">
+	<div class="dokan-panel-heading"><strong>Paynow 物流資訊</strong></div>
+			<?php
 			\PayNow_Shipping_Order_Meta_Box::output( $order );
-			echo '</div>';
+			?>
+</div>
+			<?php
 		}
 	}
 
@@ -78,56 +86,20 @@ final class Bootstrap {
 	 * @return void
 	 */
 	public function do_sync_sub_order_meta( $order, $parent_order ): void {
-		$_paynow_shipping_logistic_service   = $parent_order->get_meta( '_paynow_shipping_logistic_service' );
-		$_paynow_shipping_logistic_number    = $parent_order->get_meta( '_paynow_shipping_logistic_number' );
-		$_paynow_shipping_paymentno          = $parent_order->get_meta( '_paynow_shipping_paymentno' );
-		$_paynow_shipping_validation_no      = $parent_order->get_meta( '_paynow_shipping_validation_no' );
-		$_paynow_shipping_return_msg         = $parent_order->get_meta( '_paynow_shipping_return_msg' );
-		$_paynow_shipping_status             = $parent_order->get_meta( '_paynow_shipping_status' );
-		$_paynow_shipping_logistic_sno       = $parent_order->get_meta( '_paynow_shipping_logistic_sno' );
-		$_paynow_shipping_delivery_status    = $parent_order->get_meta( '_paynow_shipping_delivery_status' );
-		$_paynow_shipping_logistic_code      = $parent_order->get_meta( '_paynow_shipping_logistic_code' );
-		$_paynow_shipping_detail_status_desc = $parent_order->get_meta( '_paynow_shipping_detail_status_desc' );
-		$_paynow_shipping_status_update_at   = $parent_order->get_meta( '_paynow_shipping_status_update_at' );
+		$_paynow_shipping_logistic_service    = $parent_order->get_meta( '_paynow_shipping_logistic_service' );
+		$_paynow_shipping_logistic_service_id = $parent_order->get_meta( '_paynow_shipping_logistic_service_id' );
+		$_paynow_shipping_status              = $parent_order->get_meta( '_paynow_shipping_status' );
+		$_paynow_shipping_logistic_code       = $parent_order->get_meta( '_paynow_shipping_logistic_code' );
 
 		$_shipping_paynow_storeaddress = $parent_order->get_meta( '_shipping_paynow_storeaddress' );
 		$_shipping_paynow_storeid      = $parent_order->get_meta( '_shipping_paynow_storeid' );
 		$_shipping_paynow_storename    = $parent_order->get_meta( '_shipping_paynow_storename' );
 		$_shipping_phone               = $parent_order->get_meta( '_shipping_phone' );
 
-		ob_start();
-		print_r(
-			array(
-				'_paynow_shipping_logistic_service'   => $_paynow_shipping_logistic_service,
-				'_paynow_shipping_logistic_number'    => $_paynow_shipping_logistic_number,
-				'_paynow_shipping_paymentno'          => $_paynow_shipping_paymentno,
-				'_paynow_shipping_validation_no'      => $_paynow_shipping_validation_no,
-				'_paynow_shipping_return_msg'         => $_paynow_shipping_return_msg,
-				'_paynow_shipping_status'             => $_paynow_shipping_status,
-				'_paynow_shipping_logistic_sno'       => $_paynow_shipping_logistic_sno,
-				'_paynow_shipping_delivery_status'    => $_paynow_shipping_delivery_status,
-				'_paynow_shipping_logistic_code'      => $_paynow_shipping_logistic_code,
-				'_paynow_shipping_detail_status_desc' => $_paynow_shipping_detail_status_desc,
-				'_paynow_shipping_status_update_at'   => $_paynow_shipping_status_update_at,
-				'_shipping_paynow_storeaddress'       => $_shipping_paynow_storeaddress,
-				'_shipping_paynow_storeid'            => $_shipping_paynow_storeid,
-				'_shipping_paynow_storename'          => $_shipping_paynow_storename,
-				'_shipping_phone'                     => $_shipping_phone,
-			)
-		);
-		\J7\WpToolkit\Utils::debug_log( '' . ob_get_clean() );
-
 		$order->update_meta_data( '_paynow_shipping_logistic_service', $_paynow_shipping_logistic_service );
-		$order->update_meta_data( '_paynow_shipping_logistic_number', $_paynow_shipping_logistic_number );
-		$order->update_meta_data( '_paynow_shipping_paymentno', $_paynow_shipping_paymentno );
-		$order->update_meta_data( '_paynow_shipping_validation_no', $_paynow_shipping_validation_no );
-		$order->update_meta_data( '_paynow_shipping_return_msg', $_paynow_shipping_return_msg );
+		$order->update_meta_data( '_paynow_shipping_logistic_service_id', $_paynow_shipping_logistic_service_id );
 		$order->update_meta_data( '_paynow_shipping_status', $_paynow_shipping_status );
-		$order->update_meta_data( '_paynow_shipping_logistic_sno', $_paynow_shipping_logistic_sno );
-		$order->update_meta_data( '_paynow_shipping_delivery_status', $_paynow_shipping_delivery_status );
 		$order->update_meta_data( '_paynow_shipping_logistic_code', $_paynow_shipping_logistic_code );
-		$order->update_meta_data( '_paynow_shipping_detail_status_desc', $_paynow_shipping_detail_status_desc );
-		$order->update_meta_data( '_paynow_shipping_status_update_at', $_paynow_shipping_status_update_at );
 
 		$order->update_meta_data( '_shipping_paynow_storeaddress', $_shipping_paynow_storeaddress );
 		$order->update_meta_data( '_shipping_paynow_storeid', $_shipping_paynow_storeid );
@@ -138,13 +110,17 @@ final class Bootstrap {
 	}
 
 	/**
-	 * Fires when order status is changed.
+	 * Sync sub order meta
 	 *
-	 * @since 1.0.0
+	 * @deprecated version
 	 *
-	 * @param WC_Order $parent_order $order Order object.
+	 * @param \WC_Order $order The sub order object.
+	 * @param \WC_Order $parent_order The parent order object.
+	 * @param array     $seller_products The seller products.
+	 *
+	 * @return void
 	 */
-	public function sync_sub_order_meta( $parent_order ) {
+	public function sync_sub_order_meta( $order, $parent_order, $seller_products ): void { //phpcs:ignore
 
 		$parent_order_id = $parent_order->get_id();
 		if ( ! $parent_order_id ) {
@@ -155,7 +131,7 @@ final class Bootstrap {
 			array(
 				'post_parent' => $parent_order_id,
 				'post_type'   => 'shop_order',
-				'post_status' => array( 'wc-pending', 'wc-processing', 'wc-completed' ),
+				'post_status' => 'any',
 				'fields'      => 'ids',
 			)
 		);
@@ -163,16 +139,12 @@ final class Bootstrap {
 			return;
 		}
 
-		ob_start();
-		print_r( $sub_order_ids );
-		\J7\WpToolkit\Utils::debug_log( 'sub_order_ids ' . ob_get_clean() );
-
 		foreach ( $sub_order_ids as $order_id ) {
 			$order = \wc_get_order( $order_id );
 			if ( ! $order ) {
 				continue;
 			}
-			$this->do_sync_sub_order_meta( $order, $parent_order );
+			$this->do_sync_sub_order_meta_v2( $order, $parent_order );
 		}
 	}
 }
