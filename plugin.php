@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:       供應商系統擴展 | Dokan Custom Extension
+ * Plugin Name:       Dokan Custom Extension | 供應商系統擴展
  * Plugin URI:        https://github.com/j7-dev/wp-dokan-custom-extension
  * Description:       此外掛為針對 Dokan 外掛客製化擴展，整合 multi-vendor 的運費顯示即 Paynow 物流資訊。
  * Version:           0.0.3
